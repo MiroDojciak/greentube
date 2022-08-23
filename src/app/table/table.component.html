@@ -1,0 +1,101 @@
+<p-table [value]="assessments">
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Player</th>
+      <th>Agent</th>
+      <th>Assessment date</th>
+      <th>Actions</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-assessment>
+    <tr>
+      <td>{{assessment.player}}</td>
+      <td>{{assessment.agent}}</td>
+      <td>{{assessment.assessmentDate | date: 'MM/dd/yyyy'}}</td>
+      <td>
+        <button pButton pRipple class="mr-3" type="button" label="View" (click)="view(assessment)"></button>
+        <button pButton pRipple class="mr-3" type="button" label="Update" (click)="update(assessment)"></button>
+        <button pButton pRipple type="button" label="Delete" (click)="delete(assessment)"></button>
+      </td>
+
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog header="Add new assessment" [(visible)]="display" [style]="{'width':'400px'}" (onHide)="dialogClosed()">
+  <form [formGroup]="assessmentForm" (ngSubmit)="createAssessment(assessmentForm.value)">
+
+    <div class="grid p-fluid">
+      <div class="col-12">
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+          <input formControlName="player" type="text" pInputText placeholder="Player" maxlength="128" required>
+        </div>
+        <div *ngIf="assessmentForm.controls['player'].invalid && (assessmentForm.controls['player'].dirty || assessmentForm.controls['player'].touched)" class="alert alert-danger">
+          Player is required.
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon"><i class="pi pi-book"></i></span>
+          <input formControlName="description" type="text" pInputText placeholder="Assessment" maxlength="1024" required>
+        </div>
+        <div *ngIf="assessmentForm.controls['player'].invalid && (assessmentForm.controls['player'].dirty || assessmentForm.controls['player'].touched)" class="alert alert-danger">
+          Assessment is required.
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon"><i class="pi pi-user"></i></span>
+          <input formControlName="agent" type="text" pInputText placeholder="Agent" maxlength="128" required>
+        </div>
+        <div *ngIf="assessmentForm.controls['player'].invalid && (assessmentForm.controls['player'].dirty || assessmentForm.controls['player'].touched)" class="alert alert-danger">
+          Agent is required.
+        </div>
+      </div>
+      <div class="col-12">
+        <div class="p-inputgroup">
+          <span class="p-inputgroup-addon"><i class="pi pi-calendar"></i></span>
+          <p-calendar formControlName="assessmentDate" name="assessmentDate" dateFormat='dd/mm/yy' appendTo="body" label="Pick date" placeholder="Assessment date" [minDate]="minDateValue">
+          </p-calendar>
+        </div>
+        <div *ngIf="assessmentForm.controls['player'].invalid && (assessmentForm.controls['player'].dirty || assessmentForm.controls['player'].touched)" class="alert alert-danger">
+          Date is required.
+        </div>
+      </div>
+    </div>
+    <button pButton type="submit" label="Confirm" *ngIf="!updateMode"></button>
+    <button pButton type="button" label="Update" *ngIf="updateMode" (click)="updateAssessment(assessmentForm.value)"></button>
+  </form>
+
+</p-dialog>
+
+
+
+<p-dialog [(visible)]="viewAssessment" [style]="{'width':'600px'}" *ngIf="selectedAssessment">
+  <div>
+    <h3>Player</h3>
+    <p>{{selectedAssessment.player}}</p>
+  </div>
+  <p-divider type="dashed"></p-divider>
+  <div>
+    <h3>Assessment</h3>
+    <p>{{selectedAssessment.description}}</p>
+  </div>
+  <p-divider type="dashed"></p-divider>
+  <div>
+    <h3>Agent</h3>
+    <p>{{selectedAssessment.agent}}</p>
+  </div>
+  <p-divider type="dashed"></p-divider>
+  <div>
+    <h3>Date</h3>
+    <p>{{selectedAssessment.assessmentDate | date: 'MM/dd/yyyy'}}</p>
+  </div>
+</p-dialog>
+
+<button pButton type="button" (click)="this.display = true" icon="pi pi-plus" label="Add assessment"></button>
+
+
+
+
